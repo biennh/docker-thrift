@@ -43,4 +43,5 @@ RUN buildDeps=" \
 	&& rm -rf go \
 	&& apt-get purge -y --auto-remove $buildDeps
 
+WORKDIR /data/
 CMD [ "thrift" ]
