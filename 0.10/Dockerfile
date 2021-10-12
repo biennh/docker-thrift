@@ -3,6 +3,9 @@ MAINTAINER Adam Hawkins <hi@ahawkins.me>
 
 ENV THRIFT_VERSION 0.10.0
 
+RUN echo "deb http://archive.debian.org/debian wheezy main" > /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security wheezy/updates main" >> /etc/apt/sources.list
+
 RUN buildDeps=" \
 		automake \
 		bison \
@@ -20,7 +23,7 @@ RUN buildDeps=" \
 		make \
 		pkg-config \
 	"; \
-	apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* \
+	apt-get update -o Acquire::Check-Valid-Until=false && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* \
 	&& curl -sSL "http://apache.mirrors.spacedump.net/thrift/$THRIFT_VERSION/thrift-$THRIFT_VERSION.tar.gz" -o thrift.tar.gz \
 	&& mkdir -p /usr/src/thrift \
 	&& tar zxf thrift.tar.gz -C /usr/src/thrift --strip-components=1 \
@@ -37,5 +40,6 @@ RUN buildDeps=" \
 	&& cp go/bin/gofmt /usr/bin/gofmt \
 	&& rm -rf go \
 	&& apt-get purge -y --auto-remove $buildDeps
-
+	
+WORKDIR /data/
 CMD [ "thrift" ]
